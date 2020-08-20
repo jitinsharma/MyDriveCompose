@@ -8,9 +8,9 @@ import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,6 +49,64 @@ fun DriveScreen() {
             InputField()
             Spacer(modifier = Modifier.preferredHeight(16.dp))
             StorageCard()
+            Spacer(modifier = Modifier.preferredHeight(16.dp))
+            FolderList()
+        }
+    }
+}
+
+sealed class FolderListItem
+data class TitleItem(val name: String = "My Folders") : FolderListItem()
+data class ContentItem(
+    val name: String,
+    val count: String,
+    val size: String
+) : FolderListItem()
+
+@Composable
+fun FolderList() {
+    Card(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White,
+        shape = RoundedCornerShape(topLeft = 16.dp, topRight = 16.dp)
+    ) {
+        LazyColumnFor(
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+            items = listOf(
+                TitleItem(),
+                ContentItem(name = "E-Learning Web Design", count = "12 items", size = "10 Mb"),
+                ContentItem(name = "Online Shop Web Design", count = "22 items", size = "23 Mb"),
+                ContentItem(name = "Analytical Dashboard", count = "40 items", size = "33 Mb"),
+                ContentItem(name = "Creative Landing Page", count = "6 items", size = "5 Mb"),
+                ContentItem(name = "Hospital Dashboard", count = "24 items", size = "27 Mb"),
+                ContentItem(name = "Web UI kit", count = "22 items", size = "23 Mb")
+            )
+        ) { item ->
+            when (item) {
+                is TitleItem -> {
+                    Row(
+                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp, end = 8.dp)
+                            .fillParentMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = item.name)
+                        Image(asset = vectorResource(id = R.drawable.ic_square_menu))
+                    }
+                }
+                is ContentItem -> {
+                    Row {
+                        Image(asset = vectorResource(id = R.drawable.ic_folder_big))
+                        Spacer(modifier = Modifier.preferredWidth(8.dp))
+
+                        Column(
+                            modifier = Modifier.gravity(Alignment.CenterVertically)
+                        ) {
+                            Text(text = item.name)
+                            Text(text = "${item.count}  .  ${item.size}")
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -60,48 +118,70 @@ fun StorageCard() {
         shape = RoundedCornerShape(24.dp),
         color = Color(0xFF4378DB)
     ) {
-        Column(modifier = Modifier.padding(start = 32.dp)) {
-            Spacer(modifier = Modifier.preferredHeight(32.dp))
-            Image(asset = vectorResource(id = R.drawable.drive_icon))
-            Spacer(modifier = Modifier.preferredHeight(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalGravity = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "Free Storage",
-                        style = MaterialTheme.typography.h6,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.preferredHeight(8.dp))
-                    Text(
-                        text = annotatedString {
-                            pushStyle(
-                                SpanStyle(
-                                    fontWeight = FontWeight.Medium
+        Stack {
+            Column(modifier = Modifier.padding(start = 32.dp)) {
+                Spacer(modifier = Modifier.preferredHeight(32.dp))
+                Image(asset = vectorResource(id = R.drawable.drive_icon))
+                Spacer(modifier = Modifier.preferredHeight(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalGravity = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Free Storage",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier.preferredHeight(8.dp))
+                        Text(
+                            text = annotatedString {
+                                pushStyle(
+                                    SpanStyle(
+                                        fontWeight = FontWeight.Medium
+                                    )
                                 )
-                            )
-                            append("7.5Gb /")
-                            pop()
-                            pushStyle(
-                                SpanStyle(
-                                    fontWeight = FontWeight.Light
+                                append("7.5Gb /")
+                                pop()
+                                pushStyle(
+                                    SpanStyle(
+                                        fontWeight = FontWeight.Light
+                                    )
                                 )
-                            )
-                            append(" 15 Gb")
-                        },
-                        style = MaterialTheme.typography.h6,
-                        color = Color.White
-                    )
+                                append(" 15 Gb")
+                            },
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White
+                        )
+                    }
+                    Stack {
+                        Image(asset = vectorResource(id = R.drawable.bg_circle))
+                        Text(
+                            modifier = Modifier.gravity(Alignment.Center),
+                            text = "50%",
+                            color = Color.White
+                        )
+                    }
                 }
-                CircularProgressIndicator(
-                    progress = 0.5f,
-                    color = Color.White
+                Spacer(modifier = Modifier.preferredHeight(32.dp))
+            }
+            Box(
+                modifier = Modifier.gravity(Alignment.TopEnd).preferredHeight(56.dp)
+                    .preferredWidth(56.dp),
+                gravity = Alignment.Center,
+                shape = RoundedCornerShape(
+                    topLeft = 0.dp,
+                    bottomLeft = 24.dp,
+                    bottomRight = 0.dp,
+                    topRight = 24.dp
+                ),
+                backgroundColor = Color(0xFF405DB5)
+            ) {
+                Image(
+                    asset = vectorResource(id = R.drawable.ic_left)
                 )
             }
-            Spacer(modifier = Modifier.preferredHeight(32.dp))
         }
     }
 }
