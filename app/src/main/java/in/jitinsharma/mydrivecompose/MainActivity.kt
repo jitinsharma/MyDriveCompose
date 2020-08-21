@@ -3,22 +3,21 @@ package `in`.jitinsharma.mydrivecompose
 import `in`.jitinsharma.mydrivecompose.ui.MyDriveComposeTheme
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Box
-import androidx.compose.foundation.Icon
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.Text
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.setContent
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.annotatedString
@@ -30,21 +29,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyDriveComposeTheme {
-                DriveScreen()
+            val darkModeState = remember { mutableStateOf(false) }
+            MyDriveComposeTheme(darkTheme = darkModeState) {
+                DriveScreen(darkModeState)
             }
         }
     }
 }
 
 @Composable
-fun DriveScreen() {
+fun DriveScreen(darkTheme: MutableState<Boolean>) {
     Box(
         modifier = Modifier.fillMaxSize(),
-        backgroundColor = Color(0xFFF2F5F8)
+        backgroundColor = MaterialTheme.colors.secondary
     ) {
         Column {
-            Header()
+            Header(darkTheme)
             Spacer(modifier = Modifier.preferredHeight(16.dp))
             InputField()
             Spacer(modifier = Modifier.preferredHeight(16.dp))
@@ -67,7 +67,7 @@ data class ContentItem(
 fun FolderList() {
     Card(
         modifier = Modifier.fillMaxSize(),
-        color = Color.White,
+        color = MaterialTheme.colors.background,
         shape = RoundedCornerShape(topLeft = 16.dp, topRight = 16.dp)
     ) {
         LazyColumnFor(
@@ -89,8 +89,14 @@ fun FolderList() {
                             .fillParentMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = item.name)
-                        Image(asset = vectorResource(id = R.drawable.ic_square_menu))
+                        Text(
+                            text = item.name,
+                            color = MaterialTheme.colors.onBackground
+                        )
+                        Icon(
+                            asset = vectorResource(id = R.drawable.ic_square_menu),
+                            tint = MaterialTheme.colors.onBackground
+                        )
                     }
                 }
                 is ContentItem -> {
@@ -101,8 +107,14 @@ fun FolderList() {
                         Column(
                             modifier = Modifier.gravity(Alignment.CenterVertically)
                         ) {
-                            Text(text = item.name)
-                            Text(text = "${item.count}  .  ${item.size}")
+                            Text(
+                                text = item.name,
+                                color = MaterialTheme.colors.onBackground
+                            )
+                            Text(
+                                text = "${item.count}  -  ${item.size}",
+                                color = MaterialTheme.colors.onBackground
+                            )
                         }
                     }
                 }
@@ -116,7 +128,7 @@ fun StorageCard() {
     Card(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         shape = RoundedCornerShape(24.dp),
-        color = Color(0xFF4378DB)
+        color = MaterialTheme.colors.primary
     ) {
         Stack {
             Column(modifier = Modifier.padding(start = 32.dp)) {
@@ -132,7 +144,7 @@ fun StorageCard() {
                         Text(
                             text = "Free Storage",
                             style = MaterialTheme.typography.h6,
-                            color = Color.White
+                            color = MaterialTheme.colors.onPrimary
                         )
                         Spacer(modifier = Modifier.preferredHeight(8.dp))
                         Text(
@@ -152,7 +164,7 @@ fun StorageCard() {
                                 append(" 15 Gb")
                             },
                             style = MaterialTheme.typography.h6,
-                            color = Color.White
+                            color = MaterialTheme.colors.onPrimary
                         )
                     }
                     Stack {
@@ -196,12 +208,18 @@ fun InputField() {
             modifier = Modifier.weight(0.8f).preferredHeight(48.dp)
                 .drawShadow(elevation = 4.dp, shape = RoundedCornerShape(24.dp)),
             shape = RoundedCornerShape(24.dp),
-            backgroundColor = Color.White
+            backgroundColor = MaterialTheme.colors.background
         ) {
             Row(modifier = Modifier.padding(12.dp)) {
-                Icon(asset = vectorResource(id = R.drawable.ic_search_icon))
+                Icon(
+                    asset = vectorResource(id = R.drawable.ic_search_icon),
+                    tint = MaterialTheme.colors.onBackground
+                )
                 Spacer(modifier = Modifier.preferredWidth(16.dp))
-                Text(text = "Search Files", color = Color.Black)
+                Text(
+                    text = "Search Files",
+                    color = MaterialTheme.colors.onBackground
+                )
             }
         }
         Spacer(modifier = Modifier.preferredWidth(16.dp))
@@ -209,19 +227,27 @@ fun InputField() {
 }
 
 @Composable
-fun Header() {
+fun Header(darkTheme: MutableState<Boolean>) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Icon(
             asset = vectorResource(id = R.drawable.icon_menu),
-            modifier = Modifier.preferredSize(16.dp)
+            modifier = Modifier.preferredSize(16.dp),
+            tint = MaterialTheme.colors.onSecondary
         )
-        Text(text = "My Drive")
+        Text(
+            text = "My Drive",
+            color = MaterialTheme.colors.onSecondary
+        )
         Icon(
-            asset = imageResource(id = R.drawable.avatar),
+            asset = vectorResource(id = R.drawable.ic_options),
+            tint = MaterialTheme.colors.onSecondary,
             modifier = Modifier.preferredSize(16.dp)
+                .clickable(onClick = {
+                    darkTheme.value = darkTheme.value.not()
+                })
         )
     }
 }
@@ -229,7 +255,7 @@ fun Header() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MyDriveComposeTheme {
-        DriveScreen()
+    MyDriveComposeTheme(mutableStateOf(false)) {
+        DriveScreen(mutableStateOf(false))
     }
 }

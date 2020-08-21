@@ -5,17 +5,28 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = purple200,
-    primaryVariant = purple700,
-    secondary = teal200
+    primary = Color(0xFF4378DB),
+    primaryVariant = Color(0xFF405DB5),
+    secondary = Color.Black,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    background = Color.Black,
+    onBackground = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White
 )
 
 private val LightColorPalette = lightColors(
-    primary = purple500,
-    primaryVariant = purple700,
-    secondary = teal200
+    primary = Color(0xFF4378DB),
+    primaryVariant = Color(0xFF405DB5),
+    secondary = Color(0xFFF2F5F8),
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    surface = Color.White
 
     /* Other default colors to override
 background = Color.White,
@@ -29,10 +40,10 @@ onSurface = Color.Black,
 
 @Composable
 fun MyDriveComposeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: MutableState<Boolean>,
     content: @Composable() () -> Unit
 ) {
-    val colors = if (darkTheme) {
+    val colors = if (darkTheme.value) {
         DarkColorPalette
     } else {
         LightColorPalette
