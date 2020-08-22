@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.ambientOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.ui.tooling.preview.Preview
 
 class MainActivity : AppCompatActivity() {
@@ -28,20 +30,22 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val darkModeState = remember { mutableStateOf(false) }
             MyDriveComposeTheme(darkTheme = darkModeState) {
-                DriveScreen(darkModeState)
+                DriveScreen {
+                    darkModeState.value = darkModeState.value.not()
+                }
             }
         }
     }
 }
 
 @Composable
-fun DriveScreen(darkTheme: MutableState<Boolean>) {
+fun DriveScreen(onOptionClick: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = MaterialTheme.colors.secondary
     ) {
         Column {
-            Header(darkTheme)
+            Header { onOptionClick.invoke() }
             Spacer(modifier = Modifier.preferredHeight(16.dp))
             InputField()
             Spacer(modifier = Modifier.preferredHeight(16.dp))
@@ -52,11 +56,10 @@ fun DriveScreen(darkTheme: MutableState<Boolean>) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     MyDriveComposeTheme(mutableStateOf(false)) {
-        DriveScreen(mutableStateOf(false))
+        DriveScreen { }
     }
 }

@@ -18,7 +18,7 @@ val typography = Typography(
         h6 = TextStyle(
                 fontFamily = font(R.font.poppins_semibold).asFontFamily(),
                 fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
+                fontSize = 20.sp
         ),
         subtitle1 = TextStyle(
                 fontFamily = font(R.font.poppins_regular).asFontFamily(),

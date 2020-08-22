@@ -29,7 +29,8 @@ fun FolderList() {
             when (item) {
                 is TitleItem -> {
                     Row(
-                        modifier = Modifier.padding(start = 16.dp, bottom = 16.dp, end = 8.dp)
+                        modifier = Modifier
+                            .padding(start = 16.dp, bottom = 16.dp, end = 8.dp)
                             .fillParentMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {

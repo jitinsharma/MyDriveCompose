@@ -7,9 +7,11 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawShadow
+import androidx.compose.ui.drawLayer
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 
@@ -20,7 +22,9 @@ fun InputField() {
     ) {
         Spacer(modifier = Modifier.preferredWidth(16.dp))
         Box(
-            modifier = Modifier.weight(0.8f).preferredHeight(48.dp)
+            modifier = Modifier
+                .weight(0.8f)
+                .preferredHeight(48.dp)
                 .drawShadow(elevation = 4.dp, shape = RoundedCornerShape(24.dp)),
             shape = RoundedCornerShape(24.dp),
             backgroundColor = MaterialTheme.colors.background
